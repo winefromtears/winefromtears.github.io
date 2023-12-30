@@ -1,0 +1,136 @@
+<!doctype>
+
+<html>
+<head>
+ <title>
+   Wine From Tears Official Web Site
+ </title>
+ <link rel=stylesheet type="text/css" href="styll.css">
+ <script type="text/javascript" src="opacity.js"></script><script type="text/javascript">
+ fadeOpacity.addRule('oR1', .3, 1, 30);
+ </script>
+ <script type="text/javascript" src="jquery.js"></script>
+</head>
+<BODY leftMargin=0 rightMargin=0 topMargin=0 bottomMargin=0 marginheight="0" marginwidth="0">
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<center>
+  <TABLE cellSpacing=0 cellPadding=0 border=0>
+ <TBODY>
+ <TR height=27>
+  <TD width=62><a href="news.html"><img class=o id="fImg1" src="menu/news.png" border="0" alt=""></a></TD>
+  <TD width=48><a href="bio/bio.html"><img class=o id="fImg2" onMouseOver="fadeOpacity(this.id, 'oR1')"  onmouseout="fadeOpacity.back(this.id)" src="menu/bio.png" border="0" alt=""></a></TD>
+  <TD width=85><a href="releases/releases.html"><img class=o id="fImg3" onMouseOver="fadeOpacity(this.id, 'oR1')"  onmouseout="fadeOpacity.back(this.id)" src="menu/releases.png" border="0" alt=""></a></TD>
+  <TD width=85><a href="gallery/gallery.html"><img class=o id="fImg4" onMouseOver="fadeOpacity(this.id, 'oR1')"  onmouseout="fadeOpacity.back(this.id)" src="menu/gallery.png" border="0" alt=""></a></TD>
+  <TD width=81><a href="contact.html"><img class=o id="fImg5" onMouseOver="fadeOpacity(this.id, 'oR1')"  onmouseout="fadeOpacity.back(this.id)" src="menu/contact.png" border="0" alt=""></a></TD>
+  <TD width=64><a href="links.html"><img class=o id="fImg6" onMouseOver="fadeOpacity(this.id, 'oR1')"  onmouseout="fadeOpacity.back(this.id)" src="menu/links.png" border="0" alt=""></a></TD>
+  <TD width=105><a href="http://winefromtears.com/gbook.html"><img onMouseOver="fadeOpacity(this.id, 'oR1')"  onmouseout="fadeOpacity.back(this.id)" src="menu/gbook.png" border="0" alt=""></a></TD>
+ </TR>
+ </TBODY></TABLE>
+  <br><br>
+
+
+<center>
+<form id="myForm">
+<tr><td><table border=0 align=center>
+<tr><td width=180 class=p>*Ваше имя:</td><td width=300 class=p>E-mail:</td></tr>
+<tr><td width=180><input class=p style="width: 160px;" id="username" type=text name=username value=""></td><td><input class=p style="width: 160px;" id="mail" type=text name=mail value=""></td></tr>
+<tr><td width=180 class=p>URL:</td><td width=300 class=p>Город:</td>
+<tr><td width=180><input class=p style="width: 160px;" id="url" type=text name=url  value=""></td><td><input class=p style="width: 160px;" id="city" type=text name=city value=""></td></tr>
+<tr><td width=560 colspan=2 class=p valign=top>*Сообщение:</td></tr>
+<tr><td colspan=2><textarea class=p style="width: 560px;"  id="msg" name="msg" rows=5></textarea></td></tr>
+<tr><td colspan=2 align=right><div id="warn"><input style="width: 150px;" type="submit" value="Добавить сообщение"></div></td></tr>
+</table>
+</center>
+</form>
+
+<script>
+
+var atest= "";
+	function splash()
+	{
+		if (document.myForm.username.value  =='')
+			{
+				alert("Укажите Ваше имя!");
+				return false;
+			}
+
+		if (document.myForm.msg.value  =='')
+			{
+				alert ("Заполните текст сообщения!");
+				return false;
+			}
+
+		return true;
+	}
+
+	function show_messages(t)
+	{
+
+		$.ajax({
+			url: "show.php"+t,
+			cache: false,
+			success: function(html){
+				$("#messages").html(html);
+			}
+		});
+	}
+
+	$(document).ready(function(){
+
+		show_messages("?t=0");
+
+		$("#myForm").submit(function(){
+
+			var name = $("#username").val();
+			var msg  = $("#msg").val();
+			var uemail  = $("#mail").val();
+			var uurl  = $("#url").val();
+			var ucity  = $("#city").val();
+
+			var subutt = " <input style=\"width: 150px;\" type=\"submit\" value=\"Добавить сообщение\"> ";
+			if(atest==name+msg+ucity+uemail+uurl)
+			{
+	           	$("#warn").html("<font><small><b>Введите новое сообщение</small></b></font>"+subutt);
+	           	  return false;
+	        }
+            else {atest=name+msg+ucity+uemail+uurl; }
+
+			if (name =='')
+			{
+				$("#warn").html("<span style='font-family: Verdana; color: red;'><small><b>Укажите Ваше имя!</small></b></span>"+subutt);
+				return false;
+			}
+			if (msg =='')
+			{
+				$("#warn").html("<span style='font-family: Verdana; color: red;'><small><b>Заполните текст сообщения!</small></b></span>"+subutt);
+				return false;
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "action.php",
+				data: "username="+name+"&msg="+msg+"&city="+ucity+"&email="+uemail+"&url="+uurl+"&action=add",
+				success: function(msg){
+					show_messages("?t=0");
+					$("#warn").html("<font>Сообщение добавленно</font>"+subutt);
+					document.forms['myForm'].reset()
+				   }
+			});
+
+			return false;
+		});
+
+	});
+
+</script><br>
+ <div id="messages"></div>
+<br><font> </font><br>
+<font class=g>
+   &copy Wine From Tears 2008-2010<br>
+   Сайт существует с 13.04.08<br>
+   При использовании материалов с сайта ссылка обязательна!<br>
+   <b>Design by [<a href="http://romankamin.com" target=_blank>Roman Kamin</a>]</b><br>
+  </font>
+</center>
+ </body>
+</html>
